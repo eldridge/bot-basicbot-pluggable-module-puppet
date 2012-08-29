@@ -5,26 +5,24 @@ use warnings;
 
 =head1 NAME
 
-Bot::BasicBot::Pluggable::Module::Puppet - Limited Remote Control
+Bot::BasicBot::Pluggable::Module::Puppet - Ventriloquy via POE-flavored YAML over TCP
 
 =head1 DESCRIPTION
 
-simply put, Bot::BasicBot::Pluggable::Module::Puppet
-allows you to turn your bot into a puppet by forcing
-the bot to talk from remote.
+Bot::BasicBot::Pluggable::Module::Puppet enables talking in channels as
+the bot by sending commands to it over a TCP socket.
 
 =head1 SYNOPSIS
 
-you will need to load the module into your instance:
+You will need to load the module into your instance:
 
  $bot->load('Puppet');
 
-the bot will listen on the address and port specified
-in the store by the keys addr and port, respectively.
+The bot will listen on the address and port specified in the store via
+the keys C<addr> and C<port>.  If not specified, the bind address and
+port will default to C<127.0.0.1> and C<28800>, respectively.
 
 =cut
-
-our $VERSION = '0.1';
 
 use POE;
 use POE::Component::Server::TCP;
@@ -37,15 +35,16 @@ use base 'Bot::BasicBot::Pluggable::Module';
 
 =item init
 
-initialization method called by the constructor
-inheritied by Bot::BasicBot::Pluggable::Module.
-our object is instantiated by the load method
-in Bot::BasicBot::Pluggable.
+This method is an initialization method called by the constructor
+inherited from Bot::BasicBot::Pluggable::Module.  The plugin object
+itself is instantiated by the load method in Bot::BasicBot::Pluggable.
 
-a TCP server is created here using POE and a YAML
-serializer via POE::Filter::Reference.  the data
-that the server expects to receive should be a
-hashref that is passed directly to the say method.
+The initialization comprises the entire functionality of this plugin.
+The real work is done by the POE pieces and the ClientInput callback.
+
+We instantiate a new POE::Component::Server::TCP object that utilizes a
+YAML serializer via POE::Filter::Reference.  The TCP server expects to
+receive a hashref that is passed directly to the bot's say method.
 
 =cut
 
@@ -67,11 +66,12 @@ sub init
 
 =head1 BUGS
 
-absolutely no access control
+This plugin offers absolutely no access control, so be aware of
+how/where you deploy it.
 
 =head1 AUTHOR
 
-mike eldridge <diz@cpan.org>
+Mike Eldridge <diz@cpan.org>
 
 =cut
 
