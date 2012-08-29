@@ -1,0 +1,4 @@
+Bot::BasicBot::Pluggable::Module::Puppet is a pluggable module for the
+Bot::BasicBot::Pluggable IRC bot framework that allows you to turn your
+bot into a puppet by exposing Bot::BasicBot's say method via a simple
+TCP server.
